@@ -1,0 +1,56 @@
+<template>
+  <require from="pager.css"></require>
+  
+  <div class="pager-container">
+    <span if.bind="enableFirstLastPageArrows" click.delegate="pageToBeginning()" disabled.bind="!canPageBackward">
+      <template replaceable part="page-to-beginning-content">
+        <button type="button">|<</button>
+      </template>
+    </span>
+    <span if.bind="enablePageArrows" click.delegate="retreat()" disabled.bind="!canPageBackward">
+      <template replaceable part="page-retreat-content">
+        <button type="button"><</button>
+      </template> 
+    </span>
+    <span if.bind="totalPages > 1" click.delegate="pageTo(1)" disabled.bind="!canPageBackward" class="settings.currentPage === 1 ? 'active' : ''">
+      <template replaceable part="page-first-content">
+        <button type="button">1</button>
+      </template>
+    </span>
+    <span if.bind="hasMorePagesBackward" disabled>
+      <template replaceable part="page-filler-before-content">
+        <button type="button">...</button>
+      </template>
+    </span>
+    <template repeat.for="page of range">
+      <span click.delegate="pageTo(page)" disabled.bind="page === settings.currentPage" class="settings.currentPage !== page ? 'active' : ''">
+        <template replaceable part="page-content">
+          <button type="button">${page}</button>
+        </template>
+      </span>
+    </template>
+    <span if.bind="hasMorePagesForward" disabled>
+      <template replaceable part="page-filler-after-content">
+        <button type="button">...</button>
+      </template>
+    </span>
+    <span if.bind="totalPages > 1" click.delegate="pageTo(totalPages)" disabled.bind="canPageForward" class="settings.currentPage === this.totalPages ? 'active' : ''">
+      <template replaceable part="page-last-content">
+        <button type="button">${totalPages}</button>
+      </template>
+    </span>
+    <span if.bind="enablePageArrows" click.delegate="advance()" disabled.bind="!canPageForward">
+      <template replaceable part="page-advance-content">
+        <button type="button">></button>
+      </template>
+    </span>
+    <span if.bind="enableFirstLastPageArrows" click.delegate="pageToEnd()" disabled.bind="!canPageForward">
+      <template replaceable part="page-to-end-content">
+        <button type="button">>|</button>
+      </template>
+    </span>
+    <span if.bind="enablePageInput" class="${ !isValidPageInput ? 'invalid' : '' }">
+      <input value.bind="pageInput" blur.trigger="updateCurrentPage()" />
+    </span>
+  </div>
+</template>
