@@ -1,56 +1,56 @@
 <template>
-  <require from="pager.css"></require>
-  
+  <require from="components/pager/pager.css"></require>
+
   <div class="pager-container">
-    <span if.bind="enableFirstLastPageArrows" click.delegate="pageToBeginning()" disabled.bind="!canPageBackward">
+    <span if.bind="enableFirstLastPageArrows" click.delegate="pageToBeginning()">
       <template replaceable part="page-to-beginning-content">
-        <button type="button">|<</button>
+        <button type="button" disabled.bind="!canPageBackward">|<</button>
       </template>
     </span>
-    <span if.bind="enablePageArrows" click.delegate="retreat()" disabled.bind="!canPageBackward">
+    <span if.bind="enablePageArrows" click.delegate="retreat()">
       <template replaceable part="page-retreat-content">
-        <button type="button"><</button>
+        <button type="button" disabled.bind="!canPageBackward"><</button>
       </template> 
     </span>
-    <span if.bind="totalPages > 1" click.delegate="pageTo(1)" disabled.bind="!canPageBackward" class="settings.currentPage === 1 ? 'active' : ''">
+    <span if.bind="hasMultiplePages" click.delegate="pageTo(firstPage)">
       <template replaceable part="page-first-content">
-        <button type="button">1</button>
+        <button type="button" disabled.bind="!canPageBackward">${firstPage}</button>
       </template>
     </span>
-    <span if.bind="hasMorePagesBackward" disabled>
+    <span if.bind="hasMorePagesBackward">
       <template replaceable part="page-filler-before-content">
-        <button type="button">...</button>
+        <button type="button" disabled>...</button>
       </template>
     </span>
     <template repeat.for="page of range">
-      <span click.delegate="pageTo(page)" disabled.bind="page === settings.currentPage" class="settings.currentPage !== page ? 'active' : ''">
+      <span click.delegate="pageTo(page)">
         <template replaceable part="page-content">
-          <button type="button">${page}</button>
+          <button type="button" disabled.bind="isCurrentPage(page)">${page}</button>
         </template>
       </span>
     </template>
-    <span if.bind="hasMorePagesForward" disabled>
+    <span if.bind="hasMorePagesForward">
       <template replaceable part="page-filler-after-content">
-        <button type="button">...</button>
+        <button type="button" disabled>...</button>
       </template>
     </span>
-    <span if.bind="totalPages > 1" click.delegate="pageTo(totalPages)" disabled.bind="canPageForward" class="settings.currentPage === this.totalPages ? 'active' : ''">
+    <span if.bind="hasMultiplePages" click.delegate="pageTo(totalPages)">
       <template replaceable part="page-last-content">
-        <button type="button">${totalPages}</button>
+        <button type="button" disabled.bind="!canPageForward">${totalPages}</button>
       </template>
     </span>
-    <span if.bind="enablePageArrows" click.delegate="advance()" disabled.bind="!canPageForward">
+    <span if.bind="enablePageArrows" click.delegate="advance()">
       <template replaceable part="page-advance-content">
-        <button type="button">></button>
+        <button type="button" disabled.bind="!canPageForward">></button>
       </template>
     </span>
-    <span if.bind="enableFirstLastPageArrows" click.delegate="pageToEnd()" disabled.bind="!canPageForward">
+    <span if.bind="enableFirstLastPageArrows" click.delegate="pageToEnd()">
       <template replaceable part="page-to-end-content">
-        <button type="button">>|</button>
+        <button type="button" disabled.bind="!canPageForward">>|</button>
       </template>
     </span>
-    <span if.bind="enablePageInput" class="${ !isValidPageInput ? 'invalid' : '' }">
-      <input value.bind="pageInput" blur.trigger="updateCurrentPage()" />
+    <span if.bind="enablePageInput">
+      <input value.bind="pageInput" blur.trigger="updateCurrentPage()" class="${ !isValidPageInput ? 'invalid' : '' }" />
     </span>
   </div>
 </template>
