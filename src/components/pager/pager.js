@@ -103,7 +103,6 @@ export class Pager {
   }
 
   bind(settingsToBind) {
-    console.log(settingsToBind);
     let settings = settingsToBind.pagerSettings || {};
     this.isValidPageInput = true;
 
