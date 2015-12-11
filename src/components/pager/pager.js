@@ -6,6 +6,30 @@ export class Pager {
     this.firstPage = this.convertFromDecimal(1);
   }
 
+  bind(settingsToBind) {
+    let settings = settingsToBind.pagerSettings || {};
+
+    this.pageSize = this.convertToDecimal(settings.pageSize) || 10;
+    this.totalNumberOfRecords = this.convertToDecimal(settings.totalNumberOfRecords) || 0;
+    this.maxExplicitPages = window.Math.max((this.convertToDecimal(settings.maxExplicitPages) || 7), 5);
+
+    let totalPages = this.totalNumberOfRecords > 0 ? window.Math.ceil(this.totalNumberOfRecords / this.pageSize) : 0;
+    let firstPage = this.convertToDecimal(this.firstPage);
+    let currentPage = this.convertToDecimal(settings.currentPage) || firstPage;
+
+    this.currentPage = this.convertFromDecimal(currentPage);
+    this.enablePageInput = !this.isUndefined(settings.enablePageInput) ? settings.enablePageInput && totalPages > 1 : totalPages > 1;
+    this.pageInput = this.currentPage;
+    this.enablePageArrows = !this.isUndefined(settings.enablePageArrows) ? settings.enablePageArrows && totalPages > 1 : totalPages > 1;
+    this.enableFirstLastPageArrows = !this.isUndefined(settings.enableFirstLastPageArrows) ? this.enablePageArrows && settings.enableFirstLastPageArrows : this.enablePageArrows;
+    this.hasMultiplePages = totalPages > firstPage;
+    this.firstPage = this.convertFromDecimal(firstPage);
+    this.totalPages = this.convertFromDecimal(totalPages);
+    this.isValidPageInput = true;
+
+    this.updateState();
+  }
+
   pageTo(pageIndex) {
     this.currentPage = isNaN(pageIndex) ? this.convertToDecimal(pageIndex) : pageIndex;
     this.pageInput = this.convertFromDecimal(pageIndex);
@@ -100,29 +124,6 @@ export class Pager {
     for (;rangeStart < rangeEnd; rangeStart++) {
       this.range.push(this.convertFromDecimal(rangeStart));
     }
-  }
-
-  bind(settingsToBind) {
-    let settings = settingsToBind.pagerSettings || {};
-    this.isValidPageInput = true;
-
-    this.pageSize = this.convertToDecimal(settings.pageSize) || 10;
-    this.totalNumberOfRecords = this.convertToDecimal(settings.totalNumberOfRecords) || 0;
-    this.maxExplicitPages = window.Math.max((this.convertToDecimal(settings.maxExplicitPages) || 7), 5);
-    let totalPages = this.totalNumberOfRecords > 0 ? window.Math.ceil(this.totalNumberOfRecords / this.pageSize) : 0;
-    this.totalPages = this.convertFromDecimal(totalPages);
-    let firstPage = this.convertToDecimal(this.firstPage);
-    let currentPage = this.convertToDecimal(settings.currentPage) || firstPage;
-    this.currentPage = this.convertFromDecimal(currentPage);
-    this.enablePageInput = !this.isUndefined(settings.enablePageInput) ? settings.enablePageInput && totalPages > 1 : totalPages > 1;
-    this.pageInput = this.currentPage;
-    this.enablePageArrows = !this.isUndefined(settings.enablePageArrows) ? settings.enablePageArrows && totalPages > 1 : totalPages > 1;
-    this.enableFirstLastPageArrows = !this.isUndefined(settings.enableFirstLastPageArrows) ? this.enablePageArrows && settings.enableFirstLastPageArrows : this.enablePageArrows; // also vm.totalPages > 2?
-    // this.canPageBackward = currentPage > firstPage;
-    // this.canPageForward = currentPage < totalPages;
-    this.hasMultiplePages = totalPages > firstPage;
-    
-    this.updateState();
   }
 
   isUndefined(obj) {
